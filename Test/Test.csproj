@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+	  <UserSecretsId>fe2eeeed-3cac-4baf-8f51-eb065f2b4b2c</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Confluent.Kafka" Version="1.4.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.8" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../Queue.Core/Queue.Core.csproj" />
+    <ProjectReference Include="../Queue.Rabbit.Client.HttpClientBuilder/Queue.Rabbit.Client.HttpClientBuilder.csproj" />
+    <ProjectReference Include="../Queue.Rabbit.Client/Queue.Rabbit.Client.csproj" />
+    <ProjectReference Include="../Queue.Rabbit.Core/Queue.Rabbit.Core.csproj" />
+    <ProjectReference Include="../Queue.Rabbit.Server/Queue.Rabbit.Server.csproj" />
+    <ProjectReference Include="../Queue.Server.Abstractions/Queue.Server.Abstractions.csproj" />
+    <ProjectReference Include="..\Queue.Kafka.Client.HttpClientBuilder\Queue.Kafka.Client.HttpClientBuilder.csproj" />
+    <ProjectReference Include="..\Queue.Kafka.Client\Queue.Kafka.Client.csproj" />
+    <ProjectReference Include="..\Queue.Kafka.Core\Queue.Kafka.Core.csproj" />
+    <ProjectReference Include="..\Queue.Kafka.Server\Queue.Kafka.Server.csproj" />
+    <ProjectReference Include="..\Queue.Nats.Client\Queue.Nats.Client.csproj" />
+    <ProjectReference Include="..\Queue.Nats.Core\Queue.Nats.Core.csproj" />
+    <ProjectReference Include="..\Queue.Nats.Server\Queue.Nats.Server.csproj" />
+  </ItemGroup>
+
+</Project>

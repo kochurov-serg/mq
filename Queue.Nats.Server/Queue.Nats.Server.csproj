@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+	  <Authors>Kochurov S. A.</Authors>
+	  <Product>Queue.Nats.Server</Product>
+	  <Version>3.1.0-alpha01</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+	  <FrameworkReference Include="Microsoft.AspNetCore.App" />
+	  <ProjectReference Include="..\Queue.Core\Queue.Core.csproj" />
+    <ProjectReference Include="..\Queue.Nats.Core\Queue.Nats.Core.csproj" />
+    <ProjectReference Include="..\Queue.Server.Abstractions\Queue.Server.Abstractions.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
+    <PackageReference Include="NATS.Client" Version="0.10.0" />
+  </ItemGroup>
+
+</Project>
