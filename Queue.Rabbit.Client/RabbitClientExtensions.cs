@@ -45,7 +45,7 @@ namespace Queue.Rabbit.Client
 		public static HttpRequestMessage AddRabbitRequestOption(this HttpRequestMessage request, RabbitRequestOption option)
 		{
 			if (option != null)
-				request.Properties.Add(RabbitRequestOption.RequestProperty, option);
+				request.Options.Set(new HttpRequestOptionsKey<RabbitRequestOption>(RabbitRequestOption.RequestProperty), option);
 
 			return request;
 		}

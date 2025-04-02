@@ -11,5 +11,6 @@ namespace Queue.Rabbit.Core
 		/// Rabbit protocol name
 		/// </summary>
 		public const string Schema = "rabbitmq";
+		public static string Status = "status";
 	}
 }

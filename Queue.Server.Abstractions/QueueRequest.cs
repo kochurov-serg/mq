@@ -1,13 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.IO.Pipelines;
-using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Formatting;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Primitives;
 
 namespace Queue.Server.Abstractions
 {

@@ -16,7 +16,7 @@ namespace Queue.Rabbit.Client
 		/// <param name="request"></param>
 		/// <param name="baseUri"></param>
 		/// <returns></returns>
-		public static IBasicProperties Prepare(this IBasicProperties props, HttpRequestMessage request)
+		public static BasicProperties Prepare(this BasicProperties props, HttpRequestMessage request)
 		{
 			if (props == null)
 				throw new ArgumentNullException(nameof(props));
@@ -40,7 +40,7 @@ namespace Queue.Rabbit.Client
 
 			props.Headers = headers;
 
-			props.DeliveryMode = 2;
+			props.DeliveryMode = DeliveryModes.Persistent;
 			if (!request.Headers.TryGetValues(QueueHeaders.Priority, out var values) || !byte.TryParse(values.FirstOrDefault(), out var priority))
 				priority = 5;
 

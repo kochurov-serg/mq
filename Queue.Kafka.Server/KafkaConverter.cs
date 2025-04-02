@@ -92,7 +92,7 @@ namespace Queue.Kafka.Server
 
 			headers.TryGetValue(HeaderNames.Accept, out var acceptValues);
 			var accept = acceptValues;
-			headers.TryGetValue(QueueHeaders.CorrelationId, out var replyTo);
+			headers.TryGetValue(QueueHeaders.ReplyId, out var replyTo);
 
 			_log.LogTrace("Create default HttpResponse");
 			var response = new QueueResponse

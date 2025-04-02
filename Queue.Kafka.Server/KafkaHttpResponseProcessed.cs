@@ -25,7 +25,7 @@ namespace Queue.Kafka.Server
 		public async Task Handle(ConsumeResult<byte[], byte[]> message, HttpContext context)
 		{
 			context.Request.Headers.TryGetValue(QueueHeaders.ReplyTo, out var replyTo);
-			context.Request.Headers.TryGetValue(QueueHeaders.CorrelationId, out var correlationId);
+			context.Request.Headers.TryGetValue(QueueHeaders.ReplyId, out var correlationId);
 
 			if (string.IsNullOrWhiteSpace(replyTo))
 			{
@@ -33,7 +33,7 @@ namespace Queue.Kafka.Server
 				return;
 			}
 
-			context.Response.Headers.TryAdd(QueueHeaders.CorrelationId, correlationId);
+			context.Response.Headers.TryAdd(QueueHeaders.ReplyId, correlationId);
 			var bodyTask = _responseConverter.Convert(context.Response);
 
 			var response = new Message<byte[], byte[]>

@@ -1,13 +1,13 @@
 ﻿using System;
+using System.Threading.Tasks;
 using RabbitMQ.Client;
 
-namespace Queue.Rabbit.Client
+namespace Queue.Rabbit.Client;
+
+/// <summary>
+/// Connection factory store by user name, host, port, virtual host
+/// </summary>
+public interface IRabbitConnectionFactory : IDisposable
 {
-	/// <summary>
-	/// Connection factory store by user name, host, port, virtual host
-	/// </summary>
-	public interface IRabbitConnectionFactory : IDisposable
-	{
-		IConnection CreateConnection(ConnectionFactory factory);
-	}
+    Task<IConnection> CreateConnection(ConnectionFactory factory);
 }

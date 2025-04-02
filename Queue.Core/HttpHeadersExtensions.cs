@@ -2,34 +2,33 @@
 using System.Linq;
 using System.Net.Http.Headers;
 
-namespace Queue.Core
+namespace Queue.Core;
+
+public static class HttpHeadersExtensions
 {
-	public static class HttpHeadersExtensions
-	{
-		/// <summary>
-		/// Добавить заголовок идентифицирующий запрос. Необходим для связки и обратного ответа
-		/// </summary>
-		/// <param name="headers">Заголовки</param>
-		/// <param name="correlationId">Уникальный идентификатор запроса</param>
-		/// <returns></returns>
-		public static HttpHeaders AddCorrelation(this HttpHeaders headers, string correlationId = null)
-		{
-			headers.Add(QueueHeaders.CorrelationId, correlationId ?? Guid.NewGuid().ToString("N"));
+    /// <summary>
+    /// Добавить заголовок идентифицирующий запрос. Необходим для связки и обратного ответа
+    /// </summary>
+    /// <param name="headers">Заголовки</param>
+    /// <param name="correlationId">Уникальный идентификатор запроса</param>
+    /// <returns></returns>
+    public static HttpHeaders AddReply(this HttpHeaders headers, string correlationId = null)
+    {
+        headers.Add(QueueHeaders.ReplyId, correlationId ?? Guid.NewGuid().ToString("N"));
 
-			return headers;
-		}
+        return headers;
+    }
 
-		/// <summary>
-		/// Получить идентификатор запроса.
-		/// </summary>
-		/// <param name="headers">Заголовки</param>
-		/// <returns></returns>
-		public static string GetCorrelationHeader(this HttpHeaders headers)
-		{
-			headers.TryGetValues(QueueHeaders.CorrelationId, out var correlationIds);
-			var correlation = correlationIds?.LastOrDefault();
+    /// <summary>
+    /// Получить идентификатор запроса.
+    /// </summary>
+    /// <param name="headers">Заголовки</param>
+    /// <returns></returns>
+    public static string GetCorrelationHeader(this HttpHeaders headers)
+    {
+        headers.TryGetValues(QueueHeaders.ReplyId, out var correlationIds);
+        var correlation = correlationIds?.LastOrDefault();
 
-			return correlation;
-		}
-	}
+        return correlation;
+    }
 }

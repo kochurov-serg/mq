@@ -1,49 +1,45 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Queue.Rabbit.Core.Repeat;
+using Queue.Server.Abstractions;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
-namespace Queue.Rabbit.Server.Interfaces
+namespace Queue.Rabbit.Server.Interfaces;
+
+public interface IRabbitCommunicationServer : IDisposable
 {
-	public interface IRabbitCommunicationServer : IDisposable
-	{
-		Task Init();
+    Task Init();
 
-		/// <summary>
-		/// Создать подключение
-		/// </summary>
-		/// <param name="received">Подписчик</param>
-		void CreateBasicConsumer(EventHandler<BasicDeliverEventArgs> received);
+    /// <summary>
+    /// Создать подключение
+    /// </summary>
+    /// <param name="received">Подписчик</param>
+    Task CreateBasicConsumer(AsyncEventHandler<BasicDeliverEventArgs> received);
 
-		/// <summary>
-		/// Отправить данные
-		/// </summary>
-		/// <returns></returns>
-		Task Send(BasicDeliverEventArgs args);
+    /// <summary>
+    /// Отправить данные
+    /// </summary>
+    /// <returns></returns>
+    Task Send(string exchange, string routingKey, BasicProperties basicProperties, ReadOnlyMemory<byte> body, CancellationToken cancellationToken);
+    
+    /// <summary>
+    /// Ack message
+    /// </summary>
+    /// <param name="deliveryTag"></param>
+    /// <returns></returns>
+    Task Ack(ulong deliveryTag);
 
-		IBasicProperties CreateBasicProperties();
+    Task TryAck(ulong deliveryTag);
 
-		/// <summary>
-		/// Отправить сообщение на повторную попытку
-		/// </summary>
-		/// <param name="args"></param>
-		/// <returns></returns>
-		Task SendException(BasicDeliverEventArgs args);
-		/// <summary>
-		/// Подтверждение обработки
-		/// </summary>
-		/// <param name="args"></param>
-		/// <returns></returns>
-		Task Ack(BasicDeliverEventArgs args);
+    /// <summary>
+    /// Wait and retry message
+    /// </summary>
+    /// <param name="args">message</param>
+    /// <param name="config">retry queue</param>
+    /// <returns></returns>
+    Task<bool> Retry(string exchange, BasicProperties basicProperties, ReadOnlyMemory<byte> body, RepeatConfig config, ulong deliveryTag, CancellationToken cancellationToken);
 
-		Task SendError(BasicDeliverEventArgs args);
-		/// <summary>
-		/// Wait and retry message
-		/// </summary>
-		/// <param name="args">message</param>
-		/// <param name="config">retry queue</param>
-		/// <returns></returns>
-		Task<bool> Retry(BasicDeliverEventArgs args, RepeatConfig config);
-	}
+    Task<bool> Retry(BasicDeliverEventArgs args, QueueContext context);
 }

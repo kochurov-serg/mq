@@ -23,6 +23,7 @@ using Queue.Rabbit.Core.Options;
 using Queue.Rabbit.Server;
 using Queue.Rabbit.Server.Extensions;
 using RabbitMQ.Client;
+using QosOptions = Queue.Rabbit.Server.QosOptions;
 
 namespace Test
 {
@@ -106,6 +107,14 @@ namespace Test
 				{
 					QueueOptions = DelayOptions.CreateInterval().Take(3).ToList()
 				},
+				Consumer = new RabbitConsumerOption
+                {
+					ParallelCount = 1
+                },
+				Qos = new QosOptions
+                {
+					PrefetchCount = 1
+                },
 				Queue = new AppQueueOption
 				{
 					Uri = new Uri("rabbitmq://localhost")

@@ -5,36 +5,37 @@ using Queue.Rabbit.Client.Interfaces;
 using Queue.Rabbit.Core.Options;
 using RabbitMQ.Client;
 
-namespace Queue.Rabbit.Client
+namespace Queue.Rabbit.Client;
+
+public class RabbitMessageHandler : HttpMessageHandler
 {
-	public class RabbitMessageHandler : HttpMessageHandler
-	{
-		private readonly IRabbitQueueClient _client;
+    private readonly IRabbitQueueClient _client;
 
-		public ConnectionFactory Factory { get; set; }
+    public ConnectionFactory Factory { get; set; }
 
-		public RabbitMessageHandler(IRabbitQueueClient client)
-		{
-			_client = client;
-		}
+    public RabbitMessageHandler(IRabbitQueueClient client)
+    {
+        _client = client;
+    }
 
-		/// <inheritdoc />
-		protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
-		{
-			if (Factory != null)
-			{
+    /// <inheritdoc />
+    protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+    {
+        if (Factory != null)
+        {
+            var propertyKey = new HttpRequestOptionsKey<RabbitRequestOption>(RabbitRequestOption.RequestProperty);
 
-				var requestOption = (request.Properties.TryGetValue(RabbitRequestOption.RequestProperty, out var requestObjectOption) ?
-										requestObjectOption as RabbitRequestOption : null) ??
-									new RabbitRequestOption();
+            if (!request.Options.TryGetValue(propertyKey, out var requestOption))
+            {
+                requestOption = new RabbitRequestOption();
+                request.Options.Set(propertyKey, requestOption);
+            }
 
-				requestOption.ConnectionFactory = Factory;
-			}
+            requestOption.ConnectionFactory = Factory;
+        }
 
+        var response = await _client.Send(request, cancellationToken);
 
-			var response = await _client.Send(request, cancellationToken);
-
-			return response;
-		}
-	}
+        return response;
+    }
 }

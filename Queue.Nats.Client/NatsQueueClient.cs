@@ -27,28 +27,28 @@ namespace Queue.Nats.Client
 			_responseParser = responseParser;
 		}
 
-		public async Task<HttpResponseMessage> Send(HttpRequestMessage request, CancellationToken token)
-		{
-			var options = request.Properties.ContainsKey(NatsQueueClientOption.ConnectionProperty)
-				? request.Properties[NatsQueueClientOption.ConnectionProperty] as Options
-				: _clientOption.Options;
+        public async Task<HttpResponseMessage> Send(HttpRequestMessage request, CancellationToken token)
+        {
+            if (!request.Options.TryGetValue(new HttpRequestOptionsKey<Options>(NatsQueueClientOption.ConnectionProperty), out var options))
+            {
+                options = _clientOption.Options;
+            }
 
 			if (options == null)
 				throw new ArgumentException(
-					$"ConnectionFactory in option or {nameof(request.Properties)} key name {NatsQueueClientOption.ConnectionProperty} must be set");
+					$"ConnectionFactory in option or {nameof(request.Options)} key name {NatsQueueClientOption.ConnectionProperty} must be set");
 
 			var content = new HttpMessageContent(request);
-			var bytesTask = content.ReadAsByteArrayAsync();
+			var bytes =await content.ReadAsByteArrayAsync().ConfigureAwait(false);
 			var correlation = request.Headers.GetCorrelationHeader();
 			var connection = _connection.CreateConnection(options);
 			if (correlation != null)
 			{
-				var responseMsg = await connection.RequestAsync(request.RequestUri.Host, await bytesTask, token);
+				var responseMsg = await connection.RequestAsync(request.RequestUri.Host, bytes, token);
 				var responseMessage = await _responseParser.Parse(responseMsg.Data, token);
 				return responseMessage;
 			}
 
-			var bytes = await bytesTask;
 			connection.Publish(request.RequestUri.Host, bytes);
 			_log.LogTrace("Message to {url} sended", request.RequestUri.Host);
 

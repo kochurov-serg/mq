@@ -10,16 +10,9 @@ using Queue.Client.Interfaces;
 namespace Queue.Client
 {
 	/// <inheritdoc />
-	public class HttpResponseParser : IHttpResponseParser
-	{
-		private readonly ILogger<HttpResponseParser> _log;
-
-		public HttpResponseParser(ILogger<HttpResponseParser> log)
-		{
-			_log = log;
-		}
-
-		public async Task<HttpResponseMessage> Parse(byte[] bytes, CancellationToken token)
+	public class HttpResponseParser(ILogger<HttpResponseParser> log) : IHttpResponseParser
+    {
+        public async Task<HttpResponseMessage> Parse(byte[] bytes, CancellationToken token)
 		{
 			try
 			{
@@ -37,7 +30,7 @@ namespace Queue.Client
 			}
 			catch (Exception e)
 			{
-				_log.LogError(e, "Error parsing response");
+				log.LogError(e, "Error parsing response");
 
 				throw;
 			}

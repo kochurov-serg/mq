@@ -1,16 +1,15 @@
 ﻿using System;
 
-namespace Queue.Core
+namespace Queue.Core;
+
+public class QueueNameExtensions
 {
-	public class QueueNameExtensions
-	{
-		public static string GetQueue(Uri uri, Uri relativeUri)
-		{
-			var fullUri = new Uri(uri, relativeUri);
+    public static string GetQueue(Uri uri, Uri relativeUri)
+    {
+        var fullUri = new Uri(uri, relativeUri);
 
-			return GetQueue(fullUri);
-		}
+        return GetQueue(fullUri);
+    }
 
-		public static string GetQueue(Uri uri) =>string.Concat(uri.Host, uri.PathAndQuery, uri.Fragment);
-	}
+    public static string GetQueue(Uri uri) =>string.Concat(uri.Host, uri.PathAndQuery, uri.Fragment);
 }

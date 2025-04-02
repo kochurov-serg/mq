@@ -121,7 +121,7 @@ namespace Queue.Kafka.Client
 
 			if (string.IsNullOrWhiteSpace(correlationId))
 			{
-				_log.LogError($"consume response, but {QueueHeaders.CorrelationId} not be set. Response will be lost");
+				_log.LogError($"consume response, but {QueueHeaders.ReplyId} not be set. Response will be lost");
 				return;
 			}
 

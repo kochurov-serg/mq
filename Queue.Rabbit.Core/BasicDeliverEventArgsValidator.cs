@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.Net.Http.Headers;
 using Queue.Core;
 using Queue.Rabbit.Core.Interfaces;
 using RabbitMQ.Client.Events;

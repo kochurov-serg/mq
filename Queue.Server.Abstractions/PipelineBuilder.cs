@@ -28,17 +28,16 @@ namespace Queue.Server.Abstractions
 			{
 				if (context == null) throw new ArgumentNullException(nameof(context));
 
-				using (var scope = _scopeFactory.CreateScope())
-				{
-					var accessor = scope.ServiceProvider.GetService<IHttpContextAccessor>();
-					if (accessor != null)
-						accessor.HttpContext = context;
+                using var scope = _scopeFactory.CreateScope();
 
-					context.RequestServices = scope.ServiceProvider;
+                var accessor = scope.ServiceProvider.GetService<IHttpContextAccessor>();
+                if (accessor != null)
+                    accessor.HttpContext = context;
 
-					await process(context).ConfigureAwait(false);
-				}
-			}
+                context.RequestServices = scope.ServiceProvider;
+
+                await process(context).ConfigureAwait(false);
+            }
 
 			var serviceProvider = _scopeFactory.CreateScope().ServiceProvider;
 			var server = serviceProvider.GetRequiredService<T>();
