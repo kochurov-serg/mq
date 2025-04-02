@@ -236,6 +236,44 @@ namespace Test.Controllers
 
             var pers = await response.Content.ReadAsAsync<Person>();
             return Ok(pers);
+        }   
+        
+        // GET api/values/5
+        [HttpGet("reply-delay/{id}")]
+        [ResponseCache(Duration = 0, NoStore = true)]
+        public async Task<ActionResult> ReplyDelay(int id)
+        {
+            var person = new Person
+            {
+                Name = "Ivan",
+                Amount = id,
+                Parent = new Person
+                {
+                    Name = "Ilya",
+                    Amount = id
+                }
+            };
+
+            var request = new HttpRequestMessage(HttpMethod.Post, "http://localhost/api/values/replyValue")
+            {
+                Content = new StringContent(JsonConvert.SerializeObject(person), Encoding.UTF8, "application/json")
+            };
+            request.Headers.AddReply(Guid.NewGuid().ToString("N"));
+            request.AddRetry(new RepeatConfig
+            {
+                Count = 3,
+                Strategy = RepeatStrategy.Progression
+            });
+
+            request.AddRabbitRequestOption(new RabbitRequestOption
+            {
+                Delay = TimeSpan.FromMinutes(1),
+            });
+            var response = await _rabbitQueue.Send(request, CancellationToken.None);
+
+
+            var pers = await response.Content.ReadAsAsync<Person>();
+            return Ok(pers);
         }
 
         private static int _counter = 0;
