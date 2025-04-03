@@ -14,9 +14,9 @@ namespace Queue.Server.Abstractions
 	{
 		/// <inheritdoc />
 		public override Task<X509Certificate2> GetClientCertificateAsync(CancellationToken cancellationToken = new CancellationToken())
-		{
-			throw new NotImplementedException();
-		}
+        {
+            return Task.FromResult<X509Certificate2>(null);
+        }
 
 		/// <inheritdoc />
 		public override X509Certificate2 ClientCertificate { get; set; }
